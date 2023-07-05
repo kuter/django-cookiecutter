@@ -1,0 +1,49 @@
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.4.0
+      hooks:
+      -   id: check-merge-conflict
+      -   id: debug-statements
+      -   id: check-case-conflict
+      -   id: trailing-whitespace
+      -   id: end-of-file-fixer
+      -   id: check-json
+      -   id: check-toml
+      -   id: check-yaml
+
+    - repo: https://github.com/psf/black
+      rev: 23.3.0
+      hooks:
+      - id: black
+        language_version: python3.8
+        exclude: migrations
+        args: [
+            --line-length=79,
+            --check,
+            --diff,
+        ]
+
+    - repo: https://github.com/PyCQA/isort
+      rev: 5.12.0
+      hooks:
+      -   id: isort
+          exclude: migrations
+          args: [
+            --check-only,
+            --diff,
+          ]
+
+    - repo: https://github.com/pycqa/flake8
+      rev: 6.0.0
+      hooks:
+      - id: flake8
+        exclude: (migrations|settings.py)
+
+    - repo: local
+      hooks:
+        - id: pre-commit-django-migrations
+          name: Check django migrations
+          entry: ./manage.py makemigrations --check
+          language: system
+          types: [python]
+          pass_filenames: false
